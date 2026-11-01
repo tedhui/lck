@@ -479,10 +479,9 @@
             render();
         }
 
-        // 採用你提供的官方 open-app 智能轉跳邏輯
+        // 穩陣可靠嘅 OpenRice 網頁版搜尋連結（精準鎖定荔枝角地區）
         function getOpenRiceUrl(name) {
-            const webUrl = 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
-            return 'https://www.openrice.com/zh/open-app?_sUrl=' + encodeURIComponent(webUrl);
+            return 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
         }
 
         function render() {
@@ -538,6 +537,7 @@
                 htmlStr += '      <span class="badge badge-building">' + r.building + '</span>';
                 htmlStr += '    </div>';
                 htmlStr += '  </div>';
+                // 採用最安全嘅 target="_blank" 新分頁開啟，絕不覆蓋你個美食地圖 App
                 htmlStr += '  <a href="' + getOpenRiceUrl(r.name) + '" target="_blank" rel="noopener" class="openrice-btn" onclick="event.stopPropagation()">OpenRice ↗</a>';
                 htmlStr += '</div>';
             }
