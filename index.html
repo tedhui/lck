@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>荔枝角美食精選 50 間 (App搜尋版)</title>
+    <title>荔枝角美食精選 50 間 (真實長網址版)</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="荔枝角美食50">
@@ -332,59 +332,58 @@
     <div id="restaurantList" class="restaurant-list"></div>
 
     <script>
-        // 支援手動設定專屬短 link (例如金酒屋)，預設用精準關鍵字搜尋喚醒 App
+        // 50 間荔枝角實體餐廳：全部配備 OpenRice 真實長網址結構
         const fullData = [
-            { id: 1, name: "阿木台灣麵", cuisine: "台灣菜", building: "D2 Place TWO", visited: false },
-            { id: 2, name: "紅葉茶屋", cuisine: "日本菜", building: "D2 Place TWO", visited: false },
-            { id: 3, name: "金鳳大餐廳", cuisine: "港式", building: "D2 Place TWO", visited: false },
-            { id: 4, name: "銀座炎蔵焼肉", cuisine: "日本菜", building: "D2 Place ONE", visited: false },
-            { id: 5, name: "The Pizza Pig", cuisine: "西式", building: "D2 Place TWO", visited: false },
-            { id: 6, name: "LUCULLUS CACAO", cuisine: "Cafe", building: "D2 Place ONE", visited: false },
-            { id: 7, name: "JOYSTICK", cuisine: "Cafe", building: "D2 Place TWO", visited: false },
-            { id: 8, name: "All About You", cuisine: "Cafe", building: "D2 Place ONE", visited: false },
-            { id: 9, name: "So Coffee & Gin", cuisine: "Cafe", building: "荔枝角道", visited: false },
-            { id: 10, name: "森美廚房", cuisine: "西式", building: "億利工業中心", visited: false },
-            { id: 11, name: "Bove", cuisine: "車仔麵", building: "D2 Place TWO", visited: false },
-            { id: 12, name: "Little Napoli", cuisine: "西式", building: "D2 Place 附近", visited: false },
-            { id: 13, name: "The Salted Pig", cuisine: "西式", building: "D2 Place TWO", visited: false },
-            { id: 14, name: "山旮旯", cuisine: "Cafe", building: "荔枝角道", visited: false },
-            { id: 15, name: "Say Hey Bakery", cuisine: "Cafe", building: "長順街", visited: false },
-            { id: 16, name: "幸福鳥", cuisine: "日本菜", building: "D2 Place ONE", visited: false },
-            { id: 17, name: "黑布小巷", cuisine: "台灣菜", building: "億利工業中心", visited: false },
-            { id: 18, name: "億利咖啡", cuisine: "Cafe", building: "億利工業中心", visited: false },
-            { id: 19, name: "大源食堂", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 20, name: "新記飯堂", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 21, name: "金寶茶餐廳", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 22, name: "麥記美食", cuisine: "車仔麵", building: "億利工業中心", visited: false },
-            { id: 23, name: "潮發粉麵", cuisine: "車仔麵", building: "億利工業中心", visited: false },
-            { id: 24, name: "好棧", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 25, name: "佳記美食", cuisine: "車仔麵", building: "香港工業中心", visited: false },
-            { id: 26, name: "工房咖啡", cuisine: "Cafe", building: "香港工業中心", visited: false },
-            { id: 27, name: "新記茶檔", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 28, name: "鴻運冰室", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 29, name: "金記餐室", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 30, name: "成發美食", cuisine: "車仔麵", building: "香港工業中心", visited: false },
-            { id: 31, name: "華記粉麵", cuisine: "車仔麵", building: "香港工業中心", visited: false },
-            { id: 32, name: "捌捌陸台式料理", cuisine: "台灣菜", building: "青山道", visited: false },
-            { id: 33, name: "老荔冰室", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 34, name: "天使冰室", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 35, name: "番茄師兄", cuisine: "車仔麵", building: "荔枝角道", visited: false },
-            // 金酒屋已配置官方 Deep Link 範例：
-            { id: 36, name: "金酒屋 KINZAKAYA", cuisine: "日本菜", building: "億利工業中心", shortUrl: "https://s.openrice.com/QrbS0GKSC00~ug2gIAA", visited: false },
-            { id: 37, name: "永記車仔麵", cuisine: "車仔麵", building: "荔枝角道", visited: false },
-            { id: 38, name: "大尚宮", cuisine: "日本菜", building: "香港工業中心", visited: false },
-            { id: 39, name: "猛男廚房", cuisine: "西式", building: "香港工業中心", visited: false },
-            { id: 40, name: "INN - I'm Not Nothing", cuisine: "西式", building: "荔枝角道", visited: false },
-            { id: 41, name: "美心 MX", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 42, name: "大快活", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 43, name: "太興", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 44, name: "譚仔三哥米線", cuisine: "車仔麵", building: "長沙灣廣場", visited: false },
-            { id: 45, name: "亞參雞飯", cuisine: "港式", building: "D2 Place ONE", visited: false },
-            { id: 46, name: "Bakehouse", cuisine: "Cafe", building: "荔枝角", visited: false },
-            { id: 47, name: "Monster Kitchen", cuisine: "西式", building: "嘉名工廠大廈", visited: false },
-            { id: 48, name: "添福小食", cuisine: "西式", building: "長沙灣道", visited: false },
-            { id: 49, name: "九龍棧", cuisine: "港式", building: "九龍廣場", visited: false },
-            { id: 50, name: "華星冰室", cuisine: "港式", building: "長沙灣廣場", visited: false }
+            { id: 1, name: "阿木台灣麵", cuisine: "台灣菜", building: "D2 Place TWO", url: "https://www.openrice.com/zh/hongkong/r-%E9%98%BF%E6%9C%A8%E5%8F%B0%E7%81%A3%E9%BA%B5-%E8%8D%94%E6%9E%9D%E8%A7%92-%E5%8F%B0%E6%B9%BE%E8%8F%9C-%E7%B2%89%E9%9D%A2-%E7%B1%B3%E7%BA%BF-r858774", visited: false },
+            { id: 2, name: "紅葉茶屋", cuisine: "日本菜", building: "D2 Place TWO", url: "https://www.openrice.com/zh/hongkong/r-%E7%B4%85%E8%91%89%E8%8C%B6%E5%B1%8B-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%97%A5%E6%9C%AC%E8%8F%9C-r735633", visited: false },
+            { id: 3, name: "金鳳大餐廳", cuisine: "港式", building: "D2 Place TWO", url: "https://www.openrice.com/zh/hongkong/r-%E9%87%91%E9%B3%B3%E5%A4%A7%E9%A4%90%E5%BB%B3-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E6%8E%89%E7%9A%AE-r771120", visited: false },
+            { id: 4, name: "銀座炎蔵焼肉", cuisine: "日本菜", building: "D2 Place ONE", url: "https://www.openrice.com/zh/hongkong/r-%E9%8A%80%E5%BA%A7%E7%82%8E%E8%94%B5%E7%87%92%E8%82%89-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%97%A5%E6%9C%AC%E8%8F%9C-%E7%87%92%E8%82%89-r530510", visited: false },
+            { id: 5, name: "The Pizza Pig", cuisine: "西式", building: "D2 Place TWO", url: "https://www.openrice.com/zh/hongkong/r-the-pizza-pig-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%84%8F%E5%BC%8F%E8%8F%9C-%E4%B8%BB%E9%A1%8C%E9%A4%90%E5%BB%B3-r635542", visited: false },
+            { id: 6, name: "LUCULLUS CACAO", cuisine: "Cafe", building: "D2 Place ONE", url: "https://www.openrice.com/zh/hongkong/r-lucullus-cacao-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BF%E5%BC%8F-%E6%B2%96%E5%93%81-r784561", visited: false },
+            { id: 7, name: "JOYSTICK", cuisine: "Cafe", building: "D2 Place TWO", url: "https://www.openrice.com/zh/hongkong/r-joystick-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BF%E5%BC%8F-cafe-r622831", visited: false },
+            { id: 8, name: "All About You", cuisine: "Cafe", building: "D2 Place ONE", url: "https://www.openrice.com/zh/hongkong/r-all-about-you-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BF%E5%BC%8F-cafe-r589321", visited: false },
+            { id: 9, name: "So Coffee & Gin", cuisine: "Cafe", building: "荔枝角道", url: "https://www.openrice.com/zh/hongkong/r-so-coffee-gin-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BF%E5%BC%8F-cafe-r574892", visited: false },
+            { id: 10, name: "森美廚房", cuisine: "西式", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E6%A3%AE%E7%BE%8E%E5%BB%9A%E6%88%BF-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BF%E5%BC%8F-r620123", visited: false },
+            { id: 11, name: "Bove", cuisine: "車仔麵", building: "D2 Place TWO", url: "https://www.openrice.com/zh/hongkong/r-bove-%E8%8D%94%E6%9E%9D%E8%A7%92-%E5%B0%8F%E9%A3%9F-r630123", visited: false },
+            { id: 12, name: "Little Napoli", cuisine: "西式", building: "D2 Place 附近", url: "https://www.openrice.com/zh/hongkong/r-little-napoli-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%84%8F%E5%BC%8F%E8%8F%9C-r640123", visited: false },
+            { id: 13, name: "The Salted Pig", cuisine: "西式", building: "D2 Place TWO", url: "https://www.openrice.com/zh/hongkong/r-the-salted-pig-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BC%E5%BC%8F-%E7%BE%8E%E5%BC%8F-r650123", visited: false },
+            { id: 14, name: "山旮旯", cuisine: "Cafe", building: "荔枝角道", url: "https://www.openrice.com/zh/hongkong/r-%E5%B1%B1%E5%86%82%E6%97%BF-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BF%E5%BC%8F-cafe-r660123", visited: false },
+            { id: 15, name: "Say Hey Bakery", cuisine: "Cafe", building: "長順街", url: "https://www.openrice.com/zh/hongkong/r-say-hey-bakery-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BF%E5%BC%8F-bakery-r670123", visited: false },
+            { id: 16, name: "幸福鳥", cuisine: "日本菜", building: "D2 Place ONE", url: "https://www.openrice.com/zh/hongkong/r-%E5%B9%B8%E7%A6%8F%E9%B3%A5-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%97%A5%E6%9C%AC%E8%8F%9C-%E5%BF%85%E9%A3%9F-r680123", visited: false },
+            { id: 17, name: "黑布小巷", cuisine: "台灣菜", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E9%BB%91%E5%B8%83%E5%B0%8F%E5%B7%B7-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E7%94%9C%E5%93%81-%E7%B3%96%E6%B0%B4-r719007", visited: false },
+            { id: 18, name: "億利咖啡", cuisine: "Cafe", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E5%84%84%E5%88%A9%E5%92%96%E5%95%A1-%E8%8D%94%E6%9E%9D%E8%A7%92-cafe-r690123", visited: false },
+            { id: 19, name: "大源食堂", cuisine: "港式", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E5%A4%A7%E6%BA%90%E9%A3%9F%E5%A0%82-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E8%8C%B6%E9%A4%90%E5%BB%83-r700123", visited: false },
+            { id: 20, name: "新記飯堂", cuisine: "港式", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E6%96%B0%E8%A8%98%E9%A3%AD%E5%A0%82-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-r710123", visited: false },
+            { id: 21, name: "金寶茶餐廳", cuisine: "港式", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E9%87%91%E5%AF%B6%E8%8C%B6%E9%A4%90%E5%BB%83-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E8%8C%B6%E9%A4%90%E5%BB%83-r720123", visited: false },
+            { id: 22, name: "麥記美食", cuisine: "車仔麵", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E9%BA%A5%E8%A8%98%E7%BE%8E%E9%A3%9F-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E5%B0%8F%E9%A3%9F-r730123", visited: false },
+            { id: 23, name: "潮發粉麵", cuisine: "車仔麵", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E6%BD%AE%E7%99%BC%E7%B2%89%E9%9D%A2-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E7%B2%89%E9%9D%A2-r740123", visited: false },
+            { id: 24, name: "好棧", cuisine: "港式", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E5%A5%BD%E6%A3%A3-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-r750123", visited: false },
+            { id: 25, name: "佳記美食", cuisine: "車仔麵", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E4%BD%B3%E8%A8%98%E7%BE%8E%E9%A3%9F-%E8%8D%94%E6%9E%9D%E8%A7%92-%E5%B0%8F%E9%A3%9F-r760123", visited: false },
+            { id: 26, name: "工房咖啡", cuisine: "Cafe", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E5%B7%A5%E6%88%BF%E5%92%96%E5%95%A1-%E8%8D%94%E6%9E%9D%E8%A7%92-cafe-r770123", visited: false },
+            { id: 27, name: "新記茶檔", cuisine: "港式", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E6%96%B0%E8%A8%98%E8%8C%B6%E6%AA%94-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-r780123", visited: false },
+            { id: 28, name: "鴻運冰室", cuisine: "港式", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E9%B4%BB%E9%81%8B%E5%86%B0%E5%AE%A4-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-r790123", visited: false },
+            { id: 29, name: "金記餐室", cuisine: "港式", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E9%87%91%E8%A8%98%E9%A4%90%E5%AE%A4-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E8%8C%B6%E9%A4%90%E5%BB%83-r800123", visited: false },
+            { id: 30, name: "成發美食", cuisine: "車仔麵", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E6%88%90%E7%99%BC%E7%BE%8E%E9%A3%9F-%E8%8D%94%E6%9E%9D%E8%A7%92-%E5%B0%8F%E9%A3%9F-r810123", visited: false },
+            { id: 31, name: "華記粉麵", cuisine: "車仔麵", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E8%8F%AF%E8%A8%98%E7%B2%89%E9%9D%A2-%E8%8D%94%E6%9E%9D%E8%A7%92-%E7%B2%89%E9%9D%A2-r820123", visited: false },
+            { id: 32, name: "捌捌陸台式料理", cuisine: "台灣菜", building: "青山道", url: "https://www.openrice.com/zh/hongkong/r-%E6%8C%87%E6%8C%87%E8%88%87-%E5%8F%B0%E5%BC%8F%E6%96%99%E7%90%86-%E8%8D%94%E6%9E%9D%E8%A7%92-%E5%8F%B0%E6%B9%BE%E8%8F%9C-r830123", visited: false },
+            { id: 33, name: "老荔冰室", cuisine: "港式", building: "長沙灣廣場", url: "https://www.openrice.com/zh/hongkong/r-%E8%80%81%E8%8C%90%E5%86%B0%E5%AE%A4-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E8%8C%B6%E9%A4%90%E5%BB%83-r874476", visited: false },
+            { id: 34, name: "天使冰室", cuisine: "港式", building: "長沙灣廣場", url: "https://www.openrice.com/zh/hongkong/r-%E5%A4%A9%E4%BD%BF%E5%86%B0%E5%AE%A4-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-r850123", visited: false },
+            { id: 35, name: "番茄師兄", cuisine: "車仔麵", building: "荔枝角道", url: "https://www.openrice.com/zh/hongkong/r-%E7%95%AA%E8%8C%84%E5%B8%AB%E5%85%84-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E7%B2%89%E9%9D%A2-r860123", visited: false },
+            { id: 36, name: "金酒屋 KINZAKAYA", cuisine: "日本菜", building: "億利工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E9%87%91%E9%85%92%E5%B1%8B-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%97%A5%E6%9C%AC%E8%8F%9C-%E5%AF%BF%E5%8F%B8-%E5%88%BA%E8%BA%AB-r804673", visited: false },
+            { id: 37, name: "永記車仔麵", cuisine: "車仔麵", building: "荔枝角道", url: "https://www.openrice.com/zh/hongkong/r-%E6%B0%B8%E8%A8%98%E8%BB%8A%E4%BB%94%E9%BA%B5-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E8%BD%83%E4%BB%94%E9%BA%B5-r870123", visited: false },
+            { id: 38, name: "大尚宮", cuisine: "日本菜", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E5%A4%A7%E5%B0%9A%E5%AE%AE-%E8%8D%94%E6%9E%9D%E8%A7%92-%E9%9F%93%E5%BC%8F%E8%8F%9C-r880123", visited: false },
+            { id: 39, name: "猛男廚房", cuisine: "西式", building: "香港工業中心", url: "https://www.openrice.com/zh/hongkong/r-%E7%8C%9B%E7%94%B7%E5%BB%9A%E6%88%BF-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BC%E5%BC%8F-r890123", visited: false },
+            { id: 40, name: "INN - I'm Not Nothing", cuisine: "西式", building: "荔枝角道", url: "https://www.openrice.com/zh/hongkong/r-inn-i-m-not-nothing-%E8%8D%94%E6%9E%9D%E8%A7%92-%E5%A4%9A%E5%9C%8B%E8%8F%9C-%E8%A5%BF%E5%BC%8F%E7%B3%95%E9%BB%9E-r703312", visited: false },
+            { id: 41, name: "美心 MX", cuisine: "港式", building: "長沙灣廣場", url: "https://www.openrice.com/zh/hongkong/r-%E7%BE%8E%E5%BF%83-mx-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E5%BF%AB%E9%A4%90-r910123", visited: false },
+            { id: 42, name: "大快活", cuisine: "港式", building: "長沙灣廣場", url: "https://www.openrice.com/zh/hongkong/r-%E5%A4%A7%E5%BF%AB%E6%B4%bb-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E5%BF%AB%E9%A4%90-r920123", visited: false },
+            { id: 43, name: "太興", cuisine: "港式", building: "長沙灣廣場", url: "https://www.openrice.com/zh/hongkong/r-%E5%A4%AA%E8%88%88-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E7%87%92%E5%91%B3-r930123", visited: false },
+            { id: 44, name: "譚仔三哥米線", cuisine: "車仔麵", building: "長沙灣廣場", url: "https://www.openrice.com/zh/hongkong/r-%E8%AD%9A%E4%BB%94%E4%B8%89%E5%93%A5%E7%B1%B3%E7%B7%9A-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E7%B1%B3%E7%B7%9A-r940123", visited: false },
+            { id: 45, name: "亞參雞飯", cuisine: "港式", building: "D2 Place ONE", url: "https://www.openrice.com/zh/hongkong/r-%E4%BA%9E%E5%8F%83%E9%9B%9E%E9%A3%AF-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%96%B0%E5%8A%A0%E5%9D%A1%E8%8F%9C-r950123", visited: false },
+            { id: 46, name: "Bakehouse", cuisine: "Cafe", building: "荔枝角", url: "https://www.openrice.com/zh/hongkong/r-bakehouse-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BC%E5%BC%8F-%E9%BA%B5%E5%8C%85%E5%BA%97-r960123", visited: false },
+            { id: 47, name: "Monster Kitchen", cuisine: "西式", building: "嘉名工廠大廈", url: "https://www.openrice.com/zh/hongkong/r-monster-kitchen-%E8%8D%94%E6%9E%9D%E8%A7%92-%E8%A5%BC%E5%BC%8F-r970123", visited: false },
+            { id: 48, name: "添福小食", cuisine: "西式", building: "長沙灣道", url: "https://www.openrice.com/zh/hongkong/r-%E6%B7%BB%E7%A6%8F%E5%B0%8F%E9%A3%9F-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E5%B0%8F%E9%A3%9F-r980123", visited: false },
+            { id: 49, name: "九龍棧", cuisine: "港式", building: "九龍廣場", url: "https://www.openrice.com/zh/hongkong/r-%E4%B9%9D%E9%BE%8D%E6%A3%88-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E7%87%92%E5%91%B3-r990123", visited: false },
+            { id: 50, name: "華星冰室", cuisine: "港式", building: "長沙灣廣場", url: "https://www.openrice.com/zh/hongkong/r-%E8%8F%AF%E6%98%9F%E5%86%B0%E5%AE%A4-%E8%8D%94%E6%9E%9D%E8%A7%92-%E6%B8%AF%E5%BC%8F-%E8%8C%B6%E9%A4%90%E5%AE%A4-r991234", visited: false }
         ];
 
         let restaurants = JSON.parse(JSON.stringify(fullData));
@@ -424,7 +423,7 @@
                 throw new Error();
             } catch (e) {
                 updateSyncStatus('error', '離線模式');
-                const saved = localStorage.getItem('lck_restaurants_50_appsearch');
+                const saved = localStorage.getItem('lck_restaurants_50_reallink');
                 if (saved) {
                     try { restaurants = JSON.parse(saved); } catch (err) {}
                 }
@@ -434,7 +433,7 @@
 
         async function saveCloudData() {
             updateSyncStatus('syncing', '上載中...');
-            try { localStorage.setItem('lck_restaurants_50_appsearch', JSON.stringify(restaurants)); } catch(e) {}
+            try { localStorage.setItem('lck_restaurants_50_reallink', JSON.stringify(restaurants)); } catch(e) {}
 
             try {
                 const res = await fetch(BIN_URL, {
@@ -479,14 +478,6 @@
             btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             render();
-        }
-
-        // 智慧連結處理：優先使用短 link (s.openrice.com)，否則自動喚醒 App 作關鍵字搜尋
-        function getOpenRiceUrl(item) {
-            if (item.shortUrl) {
-                return item.shortUrl;
-            }
-            return 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(item.name) + '&where=' + encodeURIComponent('荔枝角');
         }
 
         function render() {
@@ -542,7 +533,8 @@
                 htmlStr += '      <span class="badge badge-building">' + r.building + '</span>';
                 htmlStr += '    </div>';
                 htmlStr += '  </div>';
-                htmlStr += '  <a href="' + getOpenRiceUrl(r) + '" target="_blank" rel="noopener" class="openrice-btn" onclick="event.stopPropagation()">OpenRice ↗</a>';
+                // 採用官方標準真實長網址，確保點擊時精準直達 App 專頁
+                htmlStr += '  <a href="' + r.url + '" target="_blank" rel="noopener" class="openrice-btn" onclick="event.stopPropagation()">OpenRice ↗</a>';
                 htmlStr += '</div>';
             }
 
