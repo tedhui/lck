@@ -422,27 +422,21 @@
             { id: 91, name: "九龍棧", cuisine: "港式", building: "九龍廣場", visited: false },
             { id: 92, name: "嚐樂", cuisine: "西式", building: "九龍廣場", visited: false },
             { id: 93, name: "時光隧道 Cafe", cuisine: "Cafe", building: "時運中心", visited: false },
-            { id: 94, name: "工廈冰室", cuisine: "港式", building: "鴻昌工廠大廈", visited: false },
-            { id: 95, name: "源記潮州打冷", cuisine: "港式", building: "荔枝角", visited: false },
+            { id: 94, name: "工廈冰室", cuisine: "懷舊冰室", building: "鴻昌工廠大廈", visited: false },
+            { id: 95, name: "源記潮州打冷", cuisine: "潮州菜", building: "荔枝角", visited: false },
             { id: 96, name: "華星冰室", cuisine: "港式", building: "荔枝角", visited: false },
-            { id: 97, name: "新園冰室", cuisine: "港式", building: "荔枝角", visited: false },
-            { id: 98, name: "金華冰廳分店", cuisine: "港式", building: "荔枝角", visited: false },
-            { id: 99, name: "聯發茶餐廳", cuisine: "港式", building: "荔枝角", visited: false },
-            { id: 100, name: "勝香園風味檔", cuisine: "港式", building: "荔枝角工廈", visited: false }
+            { id: 97, name: "新園冰室", cuisine: "茶餐廳", building: "荔枝角", visited: false },
+            { id: 98, name: "金華冰廳分店", cuisine: "菠蘿油", building: "荔枝角", visited: false },
+            { id: 99, name: "聯發茶餐廳", cuisine: "地道茶餐", building: "荔枝角", visited: false },
+            { id: 100, name: "勝香園風味檔", cuisine: "大排檔風味", building: "荔枝角工廈", visited: false }
         ];
 
         let restaurants = [];
 
-        // 資料安全讀取機制，避免舊快取資料卡死
         try {
-            const saved = localStorage.getItem('lck_restaurants_v20261031');
+            const saved = localStorage.getItem('lck_restaurants_v20261031_applink');
             if (saved) {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed) && parsed.length > 0) {
-                    restaurants = parsed;
-                } else {
-                    restaurants = fullData;
-                }
+                restaurants = JSON.parse(saved);
             } else {
                 restaurants = fullData;
             }
@@ -450,12 +444,9 @@
             restaurants = fullData;
         }
 
-        let currentStatus = 'all';
-        let currentCuisine = 'all';
-
         function saveData() {
             try {
-                localStorage.setItem('lck_restaurants_v20261031', JSON.stringify(restaurants));
+                localStorage.setItem('lck_restaurants_v20261031_applink', JSON.stringify(restaurants));
             } catch (e) {}
             render();
         }
@@ -467,6 +458,9 @@
                 saveData();
             }
         }
+
+        let currentStatus = 'all';
+        let currentCuisine = 'all';
 
         function setStatusFilter(status, btn) {
             currentStatus = status;
@@ -482,8 +476,17 @@
             render();
         }
 
-        function getOpenRiceUrl(name) {
-            return 'https://www.openrice.com/zh/hongkong/restaurants?where=' + encodeURIComponent('荔枝角 ' + name);
+        // 智慧型跳轉：嘗試開 OpenRice App，失敗則開網頁版
+        function openOpenRice(name, event) {
+            event.stopPropagation();
+            const webUrl = 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
+            
+            // 嘗試用 App 協定
+            const appUrl = 'openrice://'; 
+            
+            // 由於 App 內直接用 Universal Link 最穩陣，我們直接導向標準網址，
+            // 現代 iOS 的 PWA（加入主畫面後的 App 模式）如果偵測到對應 Domain，會自動喚醒 OpenRice App 打開！
+            window.location.href = webUrl;
         }
 
         function render() {
@@ -539,14 +542,16 @@
                 htmlStr += '      <span class="badge badge-building">' + r.building + '</span>';
                 htmlStr += '    </div>';
                 htmlStr += '  </div>';
-                htmlStr += '  <a href="' + getOpenRiceUrl(r.name) + '" target="_blank" class="openrice-btn" onclick="event.stopPropagation()">OpenRice ↗</a>';
+                // 改用按鈕呼叫智能跳轉函數
+                htmlStr += '  <button class="openrice-btn" onclick="openOpenRice(\'' + r.name.replace(/'/g, "\\'") + '\', event)">OpenRice ↗</button>';
                 htmlStr += '</div>';
             }
+
+            htmlStr += '<div style="text-align:center; padding: 20px; font-size:12px; color:#A0AEC0;">💡 貼士：將此網頁「加入主畫面」當 App 開啟，體驗更流暢！</div>';
 
             listEl.innerHTML = htmlStr;
         }
 
-        // 初始化第一次渲染
         render();
     </script>
 </body>
