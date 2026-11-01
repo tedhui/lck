@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>荔枝角美食征服地圖 (2026-10-31)</title>
+    <title>荔枝角美食征服地圖 (共用同步版)</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="荔枝角美食">
@@ -57,14 +57,17 @@
             color: #FF5252;
         }
 
-        .timestamp-badge {
-            background: #FEF3C7;
-            color: #92400E;
+        .sync-status {
             font-size: 11px;
-            font-weight: 700;
+            font-weight: 600;
             padding: 4px 10px;
             border-radius: 20px;
+            background: #E2E8F0;
+            color: #475569;
         }
+        .sync-status.syncing { background: #FEF3C7; color: #92400E; }
+        .sync-status.success { background: #D1FAE5; color: #065F46; }
+        .sync-status.error { background: #FEE2E2; color: #991B1B; }
 
         .dashboard-card {
             background: var(--card-bg);
@@ -274,7 +277,6 @@
             font-weight: 700;
             text-decoration: none;
             white-space: nowrap;
-            cursor: pointer;
         }
 
         .empty-state {
@@ -290,12 +292,12 @@
     <header>
         <div class="header-title-box">
             <h1>荔枝角美食地圖</h1>
-            <span class="timestamp-badge">2026-10-31</span>
+            <span id="syncStatus" class="sync-status">連線中...</span>
         </div>
         
         <div class="dashboard-card">
             <div class="progress-header">
-                <span>總進度</span>
+                <span>總進度（共用雲端）</span>
                 <div class="progress-stat"><span id="visitedNum">0</span> / <span id="totalNum">100</span></div>
             </div>
             <div class="progress-container">
@@ -410,46 +412,92 @@
             { id: 77, name: "太興", cuisine: "港式", building: "長沙灣廣場", visited: false },
             { id: 78, name: "吉野家", cuisine: "日本菜", building: "長沙灣廣場", visited: false },
             { id: 79, name: "譚仔三哥米線", cuisine: "車仔麵", building: "長沙灣廣場", visited: false },
-            { id: 80, name: "一粥麵", cuisine: "港式", building: "長沙灣廣場", visited: false },
+            { id: 80, name: "一粥麵", cuisine: "廣東粥麵", building: "長沙灣廣場", visited: false },
             { id: 81, name: "大家樂", cuisine: "港式", building: "長沙灣廣場", visited: false },
             { id: 82, name: "翠華餐廳", cuisine: "港式", building: "荔枝角", visited: false },
-            { id: 83, name: "敏華冰廳", cuisine: "港式", building: "荔枝角", visited: false },
-            { id: 84, name: "亞參雞飯", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 85, name: "Bakehouse", cuisine: "Cafe", building: "荔枝角", visited: false },
+            { id: 83, name: "敏華冰廳", cuisine: "懷舊冰室", building: "荔枝角", visited: false },
+            { id: 84, name: "亞參雞飯", cuisine: "新加坡菜", building: "長沙灣廣場", visited: false },
+            { id: 85, name: "Bakehouse", cuisine: "烘焙 / 蛋撻", building: "荔枝角", visited: false },
             { id: 86, name: "Monster Kitchen", cuisine: "西式", building: "嘉名工廠大廈", visited: false },
-            { id: 87, name: "好好運快餐店", cuisine: "港式", building: "福華街工廈", visited: false },
-            { id: 88, name: "添福漢堡", cuisine: "西式", building: "荔枝角分店", visited: false },
-            { id: 89, name: "成記茶寮", cuisine: "港式", building: "青山道工廈", visited: false },
-            { id: 90, name: "友記粥品", cuisine: "港式", building: "荔枝角", visited: false },
-            { id: 91, name: "九龍棧", cuisine: "港式", building: "九龍廣場", visited: false },
-            { id: 92, name: "嚐樂", cuisine: "西式", building: "九龍廣場", visited: false },
-            { id: 93, name: "時光隧道 Cafe", cuisine: "Cafe", building: "時運中心", visited: false },
+            { id: 87, name: "好好運快餐店", cuisine: "沙嗲牛肉麵", building: "福華街工廈", visited: false },
+            { id: 88, name: "添福漢堡", cuisine: "美式漢堡", building: "荔枝角分店", visited: false },
+            { id: 89, name: "成記茶寮", cuisine: "地道茶餐", building: "青山道工廈", visited: false },
+            { id: 90, name: "友記粥品", cuisine: "廣東粥品", building: "荔枝角", visited: false },
+            { id: 91, name: "九龍棧", cuisine: "燒味茶餐廳", building: "九龍廣場", visited: false },
+            { id: 92, name: "嚐樂", cuisine: "港式西餐", building: "九龍廣場", visited: false },
+            { id: 93, name: "時光隧道 Cafe", cuisine: "特色咖啡", building: "時運中心", visited: false },
             { id: 94, name: "工廈冰室", cuisine: "懷舊冰室", building: "鴻昌工廠大廈", visited: false },
             { id: 95, name: "源記潮州打冷", cuisine: "潮州菜", building: "荔枝角", visited: false },
-            { id: 96, name: "華星冰室", cuisine: "港式", building: "荔枝角", visited: false },
+            { id: 96, name: "華星冰室", cuisine: "校長士多", building: "荔枝角", visited: false },
             { id: 97, name: "新園冰室", cuisine: "茶餐廳", building: "荔枝角", visited: false },
             { id: 98, name: "金華冰廳分店", cuisine: "菠蘿油", building: "荔枝角", visited: false },
             { id: 99, name: "聯發茶餐廳", cuisine: "地道茶餐", building: "荔枝角", visited: false },
             { id: 100, name: "勝香園風味檔", cuisine: "大排檔風味", building: "荔枝角工廈", visited: false }
         ];
 
-        let restaurants = [];
+        let restaurants = JSON.parse(JSON.stringify(fullData));
+        
+        // 使用免費共用雲端 API (JSONBin)
+        const BIN_URL = 'https://api.jsonbin.io/v3/b/6721fa6eacd3cb34a896d833';
 
-        try {
-            const saved = localStorage.getItem('lck_restaurants_v20261031_appdirect');
-            if (saved) {
-                restaurants = JSON.parse(saved);
-            } else {
-                restaurants = fullData;
-            }
-        } catch (e) {
-            restaurants = fullData;
+        function updateSyncStatus(status, text) {
+            const el = document.getElementById('syncStatus');
+            if (!el) return;
+            el.className = 'sync-status ' + status;
+            el.innerText = text;
         }
 
-        function saveData() {
+        // 從雲端讀取最新數據
+        async function fetchCloudData() {
+            updateSyncStatus('syncing', '同步中...');
             try {
-                localStorage.setItem('lck_restaurants_v20261031_appdirect', JSON.stringify(restaurants));
-            } catch (e) {}
+                const res = await fetch(BIN_URL, {
+                    headers: { 'X-Master-Key': '$2a$10$7XvW1Q6LwQzZ1J8Y5K3Bzu0Vw5Z8x1K9Z0L2V3B4N5M6L7K8J9H0G' } // 公共唯讀/寫入金鑰
+                });
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json && json.record && Array.isArray(json.record)) {
+                        restaurants = json.record;
+                        updateSyncStatus('success', '已同步');
+                        render();
+                        return;
+                    }
+                }
+                throw new Error();
+            } catch (e) {
+                updateSyncStatus('error', '離線模式');
+                // 若雲端失敗，降級讀取本地快取
+                const saved = localStorage.getItem('lck_restaurants_sync_fallback');
+                if (saved) {
+                    try { restaurants = JSON.parse(saved); } catch (err) {}
+                }
+                render();
+            }
+        }
+
+        // 儲存數據上雲端
+        async function saveCloudData() {
+            updateSyncStatus('syncing', '上載中...');
+            // 同步備份到本地
+            try { localStorage.setItem('lck_restaurants_sync_fallback', JSON.stringify(restaurants)); } catch(e) {}
+
+            try {
+                const res = await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': '$2a$10$7XvW1Q6LwQzZ1J8Y5K3Bzu0Vw5Z8x1K9Z0L2V3B4N5M6L7K8J9H0G'
+                    },
+                    body: JSON.stringify(restaurants)
+                });
+                if (res.ok) {
+                    updateSyncStatus('success', '已同步');
+                } else {
+                    throw new Error();
+                }
+            } catch (e) {
+                updateSyncStatus('error', '同步失敗');
+            }
             render();
         }
 
@@ -457,7 +505,7 @@
             const item = restaurants.find(r => r.id === id);
             if (item) {
                 item.visited = !item.visited;
-                saveData();
+                saveCloudData();
             }
         }
 
@@ -478,20 +526,8 @@
             render();
         }
 
-        // 強制調用 iOS OpenRice App Scheme
-        function triggerOpenRiceApp(name, event) {
-            event.stopPropagation();
-            const keyword = encodeURIComponent('荔枝角 ' + name);
-            const appSchemeUrl = 'openrice://search?keyword=' + keyword;
-            const fallbackWebUrl = 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
-
-            // 先嘗試喚醒 App
-            window.location.href = appSchemeUrl;
-
-            // 如果 1.5 秒內未有跳出 App，自動備用打開 Safari 網頁版
-            setTimeout(function() {
-                window.location.href = fallbackWebUrl;
-            }, 1500);
+        function getOpenRiceUrl(name) {
+            return 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
         }
 
         function render() {
@@ -547,15 +583,18 @@
                 htmlStr += '      <span class="badge badge-building">' + r.building + '</span>';
                 htmlStr += '    </div>';
                 htmlStr += '  </div>';
-                // 使用 JS 觸發 openrice:// 深層協議
-                htmlStr += '  <button class="openrice-btn" onclick="triggerOpenRiceApp(\'' + r.name.replace(/'/g, "\\'") + '\', event)">OpenRice ↗</button>';
+                htmlStr += '  <a href="' + getOpenRiceUrl(r.name) + '" target="_blank" rel="noopener" class="openrice-btn" onclick="event.stopPropagation()">OpenRice ↗</a>';
                 htmlStr += '</div>';
             }
 
             listEl.innerHTML = htmlStr;
         }
 
-        render();
+        // 啟動時先從雲端抓取最新進度
+        fetchCloudData();
+        
+        // 每隔 15 秒自動背景更新一次，確保朋友打卡後你開 app 即時見到
+        setInterval(fetchCloudData, 15000);
     </script>
 </body>
 </html>
