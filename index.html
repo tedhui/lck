@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>荔枝角美食征服地圖 (共用同步版)</title>
+    <title>荔枝角美食精選 50 間 (共用同步版)</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="荔枝角美食">
+    <meta name="apple-mobile-web-app-title" content="荔枝角美食50">
     
     <style>
         :root {
@@ -291,14 +291,14 @@
 
     <header>
         <div class="header-title-box">
-            <h1>荔枝角美食地圖</h1>
+            <h1>荔枝角美食精選 50 間</h1>
             <span id="syncStatus" class="sync-status">連線中...</span>
         </div>
         
         <div class="dashboard-card">
             <div class="progress-header">
                 <span>總進度（共用雲端）</span>
-                <div class="progress-stat"><span id="visitedNum">0</span> / <span id="totalNum">100</span></div>
+                <div class="progress-stat"><span id="visitedNum">0</span> / <span id="totalNum">50</span></div>
             </div>
             <div class="progress-container">
                 <div id="progressBar" class="progress-bar"></div>
@@ -332,6 +332,7 @@
     <div id="restaurantList" class="restaurant-list"></div>
 
     <script>
+        // 精選 50 間荔枝角實實在在、高質人氣餐廳
         const fullData = [
             { id: 1, name: "阿木台灣麵", cuisine: "台灣菜", building: "D2 Place TWO", visited: false },
             { id: 2, name: "紅葉茶屋", cuisine: "日本菜", building: "D2 Place TWO", visited: false },
@@ -346,98 +347,48 @@
             { id: 11, name: "Bove", cuisine: "車仔麵", building: "D2 Place Two", visited: false },
             { id: 12, name: "Little Napoli", cuisine: "西式", building: "D2 Place 附近", visited: false },
             { id: 13, name: "The Salted Pig", cuisine: "西式", building: "D2 Place", visited: false },
-            { id: 14, name: "手作之店", cuisine: "Cafe", building: "D2 Place", visited: false },
-            { id: 15, name: "山旮旯", cuisine: "Cafe", building: "D2 Place 附近", visited: false },
-            { id: 16, name: "Say Hey Bakery", cuisine: "Cafe", building: "D2 Place 附近", visited: false },
-            { id: 17, name: "Mitch Craft Beer", cuisine: "西式", building: "D2 Place", visited: false },
-            { id: 18, name: "天后", cuisine: "港式", building: "D2 Place", visited: false },
-            { id: 19, name: "幸福鳥", cuisine: "日本菜", building: "D2 Place", visited: false },
-            { id: 20, name: "度頭咖啡", cuisine: "Cafe", building: "D2 Place", visited: false },
-            { id: 21, name: "黑布小巷", cuisine: "台灣菜", building: "億利工業中心", visited: false },
-            { id: 22, name: "嚐回味", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 23, name: "大源食堂", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 24, name: "素食一家", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 25, name: "億利咖啡", cuisine: "Cafe", building: "億利工業中心", visited: false },
-            { id: 26, name: "順興食堂", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 27, name: "新記飯堂", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 28, name: "億利快餐", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 29, name: "工房美食", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 30, name: "美味棧食堂", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 31, name: "鴻記茶檔", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 32, name: "金寶茶餐廳", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 33, name: "友來小廚", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 34, name: "麥記美食", cuisine: "車仔麵", building: "億利工業中心", visited: false },
-            { id: 35, name: "活力 Cafe", cuisine: "Cafe", building: "億利工業中心", visited: false },
-            { id: 36, name: "香滿園", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 37, name: "好味速遞", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 38, name: "盈豐食堂", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 39, name: "潮發粉麵", cuisine: "車仔麵", building: "億利工業中心", visited: false },
-            { id: 40, name: "佳樂快餐", cuisine: "港式", building: "億利工業中心", visited: false },
-            { id: 41, name: "好棧", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 42, name: "香工快餐", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 43, name: "佳記美食", cuisine: "車仔麵", building: "香港工業中心", visited: false },
-            { id: 44, name: "工房咖啡", cuisine: "Cafe", building: "香港工業中心", visited: false },
-            { id: 45, name: "新記茶檔", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 46, name: "香工食堂", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 47, name: "源記茶餐廳", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 48, name: "美景快餐", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 49, name: "鴻運冰室", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 50, name: "麗閣茶檔", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 51, name: "金記餐室", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 52, name: "成發美食", cuisine: "車仔麵", building: "香港工業中心", visited: false },
-            { id: 53, name: "百味閣", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 54, name: "香工閣", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 55, name: "永盛食堂", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 56, name: "華記粉麵", cuisine: "車仔麵", building: "香港工業中心", visited: false },
-            { id: 57, name: "順利快餐", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 58, name: "新時代 Cafe", cuisine: "Cafe", building: "香港工業中心", visited: false },
-            { id: 59, name: "友記粥麵", cuisine: "車仔麵", building: "香港工業中心", visited: false },
-            { id: 60, name: "美味園", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 61, name: "大昌食堂", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 62, name: "光輝茶檔", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 63, name: "金寶快餐", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 64, name: "合興隆", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 65, name: "香工冰室", cuisine: "港式", building: "香港工業中心", visited: false },
-            { id: 66, name: "捌捌陸台式料理", cuisine: "台灣菜", building: "荔枝角商圈", visited: false },
-            { id: 67, name: "老荔冰室", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 68, name: "天使冰室", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 69, name: "番茄師兄", cuisine: "車仔麵", building: "荔枝角道", visited: false },
-            { id: 70, name: "金酒屋 KINZAKAYA", cuisine: "日本菜", building: "荔枝角核心", visited: false },
-            { id: 71, name: "永記車仔麵", cuisine: "車仔麵", building: "荔枝角道", visited: false },
-            { id: 72, name: "大尚宮", cuisine: "日本菜", building: "荔枝角道", visited: false },
-            { id: 73, name: "猛男廚房", cuisine: "西式", building: "荔枝角", visited: false },
-            { id: 74, name: "INN - I'm Not Nothing", cuisine: "西式", building: "荔枝角道", visited: false },
-            { id: 75, name: "美心 MX", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 76, name: "大快活", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 77, name: "太興", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 78, name: "吉野家", cuisine: "日本菜", building: "長沙灣廣場", visited: false },
-            { id: 79, name: "譚仔三哥米線", cuisine: "車仔麵", building: "長沙灣廣場", visited: false },
-            { id: 80, name: "一粥麵", cuisine: "廣東粥麵", building: "長沙灣廣場", visited: false },
-            { id: 81, name: "大家樂", cuisine: "港式", building: "長沙灣廣場", visited: false },
-            { id: 82, name: "翠華餐廳", cuisine: "港式", building: "荔枝角", visited: false },
-            { id: 83, name: "敏華冰廳", cuisine: "懷舊冰室", building: "荔枝角", visited: false },
-            { id: 84, name: "亞參雞飯", cuisine: "新加坡菜", building: "長沙灣廣場", visited: false },
-            { id: 85, name: "Bakehouse", cuisine: "烘焙 / 蛋撻", building: "荔枝角", visited: false },
-            { id: 86, name: "Monster Kitchen", cuisine: "西式", building: "嘉名工廠大廈", visited: false },
-            { id: 87, name: "好好運快餐店", cuisine: "沙嗲牛肉麵", building: "福華街工廈", visited: false },
-            { id: 88, name: "添福漢堡", cuisine: "美式漢堡", building: "荔枝角分店", visited: false },
-            { id: 89, name: "成記茶寮", cuisine: "地道茶餐", building: "青山道工廈", visited: false },
-            { id: 90, name: "友記粥品", cuisine: "廣東粥品", building: "荔枝角", visited: false },
-            { id: 91, name: "九龍棧", cuisine: "燒味茶餐廳", building: "九龍廣場", visited: false },
-            { id: 92, name: "嚐樂", cuisine: "港式西餐", building: "九龍廣場", visited: false },
-            { id: 93, name: "時光隧道 Cafe", cuisine: "特色咖啡", building: "時運中心", visited: false },
-            { id: 94, name: "工廈冰室", cuisine: "懷舊冰室", building: "鴻昌工廠大廈", visited: false },
-            { id: 95, name: "源記潮州打冷", cuisine: "潮州菜", building: "荔枝角", visited: false },
-            { id: 96, name: "華星冰室", cuisine: "校長士多", building: "荔枝角", visited: false },
-            { id: 97, name: "新園冰室", cuisine: "茶餐廳", building: "荔枝角", visited: false },
-            { id: 98, name: "金華冰廳分店", cuisine: "菠蘿油", building: "荔枝角", visited: false },
-            { id: 99, name: "聯發茶餐廳", cuisine: "地道茶餐", building: "荔枝角", visited: false },
-            { id: 100, name: "勝香園風味檔", cuisine: "大排檔風味", building: "荔枝角工廈", visited: false }
+            { id: 14, name: "山旮旯", cuisine: "Cafe", building: "D2 Place 附近", visited: false },
+            { id: 15, name: "Say Hey Bakery", cuisine: "Cafe", building: "D2 Place 附近", visited: false },
+            { id: 16, name: "幸福鳥", cuisine: "日本菜", building: "D2 Place", visited: false },
+            { id: 17, name: "黑布小巷", cuisine: "台灣菜", building: "億利工業中心", visited: false },
+            { id: 18, name: "億利咖啡", cuisine: "Cafe", building: "億利工業中心", visited: false },
+            { id: 19, name: "順興食堂", cuisine: "港式", building: "億利工業中心", visited: false },
+            { id: 20, name: "新記飯堂", cuisine: "港式", building: "億利工業中心", visited: false },
+            { id: 21, name: "金寶茶餐廳", cuisine: "港式", building: "億利工業中心", visited: false },
+            { id: 22, name: "麥記美食", cuisine: "車仔麵", building: "億利工業中心", visited: false },
+            { id: 23, name: "潮發粉麵", cuisine: "車仔麵", building: "億利工業中心", visited: false },
+            { id: 24, name: "好棧", cuisine: "港式", building: "香港工業中心", visited: false },
+            { id: 25, name: "佳記美食", cuisine: "車仔麵", building: "香港工業中心", visited: false },
+            { id: 26, name: "工房咖啡", cuisine: "Cafe", building: "香港工業中心", visited: false },
+            { id: 27, name: "新記茶檔", cuisine: "港式", building: "香港工業中心", visited: false },
+            { id: 28, name: "鴻運冰室", cuisine: "港式", building: "香港工業中心", visited: false },
+            { id: 29, name: "金記餐室", cuisine: "港式", building: "香港工業中心", visited: false },
+            { id: 30, name: "成發美食", cuisine: "車仔麵", building: "香港工業中心", visited: false },
+            { id: 31, name: "華記粉麵", cuisine: "車仔麵", building: "香港工業中心", visited: false },
+            { id: 32, name: "捌捌陸台式料理", cuisine: "台灣菜", building: "荔枝角商圈", visited: false },
+            { id: 33, name: "老荔冰室", cuisine: "港式", building: "長沙灣廣場", visited: false },
+            { id: 34, name: "天使冰室", cuisine: "港式", building: "長沙灣廣場", visited: false },
+            { id: 35, name: "番茄師兄", cuisine: "車仔麵", building: "荔枝角道", visited: false },
+            { id: 36, name: "金酒屋 KINZAKAYA", cuisine: "日本菜", building: "荔枝角核心", visited: false },
+            { id: 37, name: "永記車仔麵", cuisine: "車仔麵", building: "荔枝角道", visited: false },
+            { id: 38, name: "大尚宮", cuisine: "日本菜", building: "荔枝角道", visited: false },
+            { id: 39, name: "猛男廚房", cuisine: "西式", building: "荔枝角", visited: false },
+            { id: 40, name: "INN - I'm Not Nothing", cuisine: "西式", building: "荔枝角道", visited: false },
+            { id: 41, name: "美心 MX", cuisine: "港式", building: "長沙灣廣場", visited: false },
+            { id: 42, name: "大快活", cuisine: "港式", building: "長沙灣廣場", visited: false },
+            { id: 43, name: "太興", cuisine: "港式", building: "長沙灣廣場", visited: false },
+            { id: 44, name: "譚仔三哥米線", cuisine: "車仔麵", building: "長沙灣廣場", visited: false },
+            { id: 45, name: "亞參雞飯", cuisine: "港式", building: "長沙灣廣場", visited: false },
+            { id: 46, name: "Bakehouse", cuisine: "Cafe", building: "荔枝角", visited: false },
+            { id: 47, name: "Monster Kitchen", cuisine: "西式", building: "嘉名工廠大廈", visited: false },
+            { id: 48, name: "添福漢堡", cuisine: "西式", building: "荔枝角分店", visited: false },
+            { id: 49, name: "九龍棧", cuisine: "港式", building: "九龍廣場", visited: false },
+            { id: 50, name: "華星冰室", cuisine: "港式", building: "荔枝角", visited: false }
         ];
 
         let restaurants = JSON.parse(JSON.stringify(fullData));
         
-        // 使用免費共用雲端 API (JSONBin)
+        // 共用雲端 API (JSONBin)
         const BIN_URL = 'https://api.jsonbin.io/v3/b/6721fa6eacd3cb34a896d833';
 
         function updateSyncStatus(status, text) {
@@ -447,17 +398,25 @@
             el.innerText = text;
         }
 
-        // 從雲端讀取最新數據
         async function fetchCloudData() {
             updateSyncStatus('syncing', '同步中...');
             try {
                 const res = await fetch(BIN_URL, {
-                    headers: { 'X-Master-Key': '$2a$10$7XvW1Q6LwQzZ1J8Y5K3Bzu0Vw5Z8x1K9Z0L2V3B4N5M6L7K8J9H0G' } // 公共唯讀/寫入金鑰
+                    headers: { 'X-Master-Key': '$2a$10$7XvW1Q6LwQzZ1J8Y5K3Bzu0Vw5Z8x1K9Z0L2V3B4N5M6L7K8J9H0G' }
                 });
                 if (res.ok) {
                     const json = await res.json();
                     if (json && json.record && Array.isArray(json.record)) {
-                        restaurants = json.record;
+                        // 如果雲端數據長度係 100，我們過濾/對應返這 50 個 ID 或者直接覆蓋
+                        const cloudMap = {};
+                        json.record.forEach(item => { cloudMap[item.name] = item.visited; });
+                        
+                        restaurants.forEach(r => {
+                            if (cloudMap[r.name] !== undefined) {
+                                r.visited = cloudMap[r.name];
+                            }
+                        });
+
                         updateSyncStatus('success', '已同步');
                         render();
                         return;
@@ -466,8 +425,7 @@
                 throw new Error();
             } catch (e) {
                 updateSyncStatus('error', '離線模式');
-                // 若雲端失敗，降級讀取本地快取
-                const saved = localStorage.getItem('lck_restaurants_sync_fallback');
+                const saved = localStorage.getItem('lck_restaurants_50_fallback');
                 if (saved) {
                     try { restaurants = JSON.parse(saved); } catch (err) {}
                 }
@@ -475,11 +433,9 @@
             }
         }
 
-        // 儲存數據上雲端
         async function saveCloudData() {
             updateSyncStatus('syncing', '上載中...');
-            // 同步備份到本地
-            try { localStorage.setItem('lck_restaurants_sync_fallback', JSON.stringify(restaurants)); } catch(e) {}
+            try { localStorage.setItem('lck_restaurants_50_fallback', JSON.stringify(restaurants)); } catch(e) {}
 
             try {
                 const res = await fetch(BIN_URL, {
@@ -590,10 +546,7 @@
             listEl.innerHTML = htmlStr;
         }
 
-        // 啟動時先從雲端抓取最新進度
         fetchCloudData();
-        
-        // 每隔 15 秒自動背景更新一次，確保朋友打卡後你開 app 即時見到
         setInterval(fetchCloudData, 15000);
     </script>
 </body>
