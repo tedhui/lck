@@ -332,7 +332,6 @@
     <div id="restaurantList" class="restaurant-list"></div>
 
     <script>
-        // 精選 50 間荔枝角實實在在、高質人氣餐廳
         const fullData = [
             { id: 1, name: "阿木台灣麵", cuisine: "台灣菜", building: "D2 Place TWO", visited: false },
             { id: 2, name: "紅葉茶屋", cuisine: "日本菜", building: "D2 Place TWO", visited: false },
@@ -388,7 +387,6 @@
 
         let restaurants = JSON.parse(JSON.stringify(fullData));
         
-        // 共用雲端 API (JSONBin)
         const BIN_URL = 'https://api.jsonbin.io/v3/b/6721fa6eacd3cb34a896d833';
 
         function updateSyncStatus(status, text) {
@@ -407,7 +405,6 @@
                 if (res.ok) {
                     const json = await res.json();
                     if (json && json.record && Array.isArray(json.record)) {
-                        // 如果雲端數據長度係 100，我們過濾/對應返這 50 個 ID 或者直接覆蓋
                         const cloudMap = {};
                         json.record.forEach(item => { cloudMap[item.name] = item.visited; });
                         
@@ -482,8 +479,10 @@
             render();
         }
 
+        // 採用你提供的官方 open-app 智能轉跳邏輯
         function getOpenRiceUrl(name) {
-            return 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
+            const webUrl = 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
+            return 'https://www.openrice.com/zh/open-app?_sUrl=' + encodeURIComponent(webUrl);
         }
 
         function render() {
