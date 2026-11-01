@@ -264,7 +264,6 @@
         .badge-cuisine { background: #EFF6FF; color: #1D4ED8; }
         .badge-building { background: #F1F5F9; color: #475569; }
 
-        /* 改用標準超連結 <a> 標籤配合 target="_blank" */
         .openrice-btn {
             padding: 6px 10px;
             background-color: #FFF7ED;
@@ -275,6 +274,7 @@
             font-weight: 700;
             text-decoration: none;
             white-space: nowrap;
+            cursor: pointer;
         }
 
         .empty-state {
@@ -436,7 +436,7 @@
         let restaurants = [];
 
         try {
-            const saved = localStorage.getItem('lck_restaurants_v20261031_blank');
+            const saved = localStorage.getItem('lck_restaurants_v20261031_appdirect');
             if (saved) {
                 restaurants = JSON.parse(saved);
             } else {
@@ -448,7 +448,7 @@
 
         function saveData() {
             try {
-                localStorage.setItem('lck_restaurants_v20261031_blank', JSON.stringify(restaurants));
+                localStorage.setItem('lck_restaurants_v20261031_appdirect', JSON.stringify(restaurants));
             } catch (e) {}
             render();
         }
@@ -478,8 +478,20 @@
             render();
         }
 
-        function getOpenRiceUrl(name) {
-            return 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
+        // 強制調用 iOS OpenRice App Scheme
+        function triggerOpenRiceApp(name, event) {
+            event.stopPropagation();
+            const keyword = encodeURIComponent('荔枝角 ' + name);
+            const appSchemeUrl = 'openrice://search?keyword=' + keyword;
+            const fallbackWebUrl = 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
+
+            // 先嘗試喚醒 App
+            window.location.href = appSchemeUrl;
+
+            // 如果 1.5 秒內未有跳出 App，自動備用打開 Safari 網頁版
+            setTimeout(function() {
+                window.location.href = fallbackWebUrl;
+            }, 1500);
         }
 
         function render() {
@@ -535,8 +547,8 @@
                 htmlStr += '      <span class="badge badge-building">' + r.building + '</span>';
                 htmlStr += '    </div>';
                 htmlStr += '  </div>';
-                // 關鍵修改：使用超連結 <a> 配合 target="_blank" 與 rel="noopener"，強制在獨立新頁面/App外開啟
-                htmlStr += '  <a href="' + getOpenRiceUrl(r.name) + '" target="_blank" rel="noopener" class="openrice-btn" onclick="event.stopPropagation()">OpenRice ↗</a>';
+                // 使用 JS 觸發 openrice:// 深層協議
+                htmlStr += '  <button class="openrice-btn" onclick="triggerOpenRiceApp(\'' + r.name.replace(/'/g, "\\'") + '\', event)">OpenRice ↗</button>';
                 htmlStr += '</div>';
             }
 
