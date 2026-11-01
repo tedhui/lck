@@ -264,6 +264,7 @@
         .badge-cuisine { background: #EFF6FF; color: #1D4ED8; }
         .badge-building { background: #F1F5F9; color: #475569; }
 
+        /* 改用標準超連結 <a> 標籤配合 target="_blank" */
         .openrice-btn {
             padding: 6px 10px;
             background-color: #FFF7ED;
@@ -273,6 +274,7 @@
             font-size: 11px;
             font-weight: 700;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .empty-state {
@@ -434,7 +436,7 @@
         let restaurants = [];
 
         try {
-            const saved = localStorage.getItem('lck_restaurants_v20261031_applink');
+            const saved = localStorage.getItem('lck_restaurants_v20261031_blank');
             if (saved) {
                 restaurants = JSON.parse(saved);
             } else {
@@ -446,7 +448,7 @@
 
         function saveData() {
             try {
-                localStorage.setItem('lck_restaurants_v20261031_applink', JSON.stringify(restaurants));
+                localStorage.setItem('lck_restaurants_v20261031_blank', JSON.stringify(restaurants));
             } catch (e) {}
             render();
         }
@@ -476,17 +478,8 @@
             render();
         }
 
-        // 智慧型跳轉：嘗試開 OpenRice App，失敗則開網頁版
-        function openOpenRice(name, event) {
-            event.stopPropagation();
-            const webUrl = 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
-            
-            // 嘗試用 App 協定
-            const appUrl = 'openrice://'; 
-            
-            // 由於 App 內直接用 Universal Link 最穩陣，我們直接導向標準網址，
-            // 現代 iOS 的 PWA（加入主畫面後的 App 模式）如果偵測到對應 Domain，會自動喚醒 OpenRice App 打開！
-            window.location.href = webUrl;
+        function getOpenRiceUrl(name) {
+            return 'https://www.openrice.com/zh/hongkong/restaurants?what=' + encodeURIComponent(name) + '&where=' + encodeURIComponent('荔枝角');
         }
 
         function render() {
@@ -542,12 +535,10 @@
                 htmlStr += '      <span class="badge badge-building">' + r.building + '</span>';
                 htmlStr += '    </div>';
                 htmlStr += '  </div>';
-                // 改用按鈕呼叫智能跳轉函數
-                htmlStr += '  <button class="openrice-btn" onclick="openOpenRice(\'' + r.name.replace(/'/g, "\\'") + '\', event)">OpenRice ↗</button>';
+                // 關鍵修改：使用超連結 <a> 配合 target="_blank" 與 rel="noopener"，強制在獨立新頁面/App外開啟
+                htmlStr += '  <a href="' + getOpenRiceUrl(r.name) + '" target="_blank" rel="noopener" class="openrice-btn" onclick="event.stopPropagation()">OpenRice ↗</a>';
                 htmlStr += '</div>';
             }
-
-            htmlStr += '<div style="text-align:center; padding: 20px; font-size:12px; color:#A0AEC0;">💡 貼士：將此網頁「加入主畫面」當 App 開啟，體驗更流暢！</div>';
 
             listEl.innerHTML = htmlStr;
         }
