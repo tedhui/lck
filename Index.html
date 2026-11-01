@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>荔枝角100間食肆征服地圖 (2026-10-31)</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="荔枝角100間">
+    
+    <style>
+        :root {
+            --primary: #FF5722;
+            --primary-dark: #E64A19;
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-main: #212529;
+            --text-secondary: #6C757D;
+            --border-color: #DEE2E6;
+            --success: #2ECC71;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom) 16px;
+            padding-top: 20px;
+        }
+
+        header {
+            margin-bottom: 16px;
+            position: sticky;
+            top: 0;
+            background: var(--bg-color);
+            padding-bottom: 10px;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #111;
+        }
+
+        .timestamp-badge {
+            display: inline-block;
+            background-color: #E8F5E9;
+            color: #2E7D32;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .progress-container {
+            background: #E9ECEF;
+            border-radius: 8px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            background-color: var(--success);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            outline: none;
+            background: var(--card-bg);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .restaurant-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 40px;
+        }
+
+        .restaurant-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .restaurant-card.visited {
+            background-color: #F1F3F5;
+            opacity: 0.7;
+        }
+
+        .restaurant-card.visited .res-name {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 26px;
+            height: 26px;
+            border: 2px solid #ADB5BD;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: var(--success);
+            border-color: var(--success);
+        }
+
+        .checkmark::after {
+            content: "";
+            display: none;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-container input:checked ~ .checkmark::after {
+            display: block;
+        }
+
+        .res-info {
+            flex: 1;
+        }
+
+        .res-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 3px;
+        }
+
+        .res-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .res-building {
+            background: #E9ECEF;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>荔枝角100間食肆征服地圖</h1>
+        <span class="timestamp-badge">📌 資料版本：2026-10-31 全量 100 間</span>
+        
+        <div class="progress-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        <div class="progress-text">
+            <span id="progressCount">已食：0 / 100 間</span>
+            <span id="progressPercent">0%</span>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 搜尋餐廳、菜式、大廈 (如: 香工、億利、D2)..." oninput="filterRestaurants()">
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="setFilter('all', this)">全部</button>
+                <button class="filter-btn" onclick="setFilter('unvisited', this)">未食</button>
+                <button class="filter-btn" onclick="setFilter('visited', this)">已食</button>
+            </div>
+        </div>
+    </header>
+
+    <div id="restaurantList" class="restaurant-list"></div>
+
+    <script>
+        const fullData = [
+            // D2 Place 核心商場區 (1-20)
+            { id: 1, name: "阿木台灣麵", cuisine: "台灣菜", building: "D2 Place TWO", date: "2026-10-31", visited: false },
+            { id: 2, name: "紅葉茶屋", cuisine: "日本菜 / Cafe", building: "D2 Place TWO", date: "2026-10-31", visited: false },
+            { id: 3, name: "金鳳大餐廳", cuisine: "港式鐵板", building: "D2 Place TWO", date: "2026-10-31", visited: false },
+            { id: 4, name: "銀座炎蔵焼肉", cuisine: "日本燒肉", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 5, name: "The Pizza Pig", cuisine: "西式薄餅", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 6, name: "LUCULLUS CACAO", cuisine: "朱古力 Cafe", building: "D2 Place One", date: "2026-10-31", visited: false },
+            { id: 7, name: "JOYSTICK", cuisine: "玩味 Cafe", building: "D2 Place Two", date: "2026-10-31", visited: false },
+            { id: 8, name: "All About You", cuisine: "西式 Cafe", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 9, name: "So Coffee & Gin", cuisine: "咖啡 / 酒吧", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 10, name: "森美廚房", cuisine: "港式西餐", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 11, name: "Bove", cuisine: "小食 / 雞蛋仔", building: "D2 Place Two", date: "2026-10-31", visited: false },
+            { id: 12, name: "Little Napoli", cuisine: "拿坡里薄餅", building: "D2 Place 附近", date: "2026-10-31", visited: false },
+            { id: 13, name: "The Salted Pig", cuisine: "西式豬手/扒房", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 14, name: "手作之店", cuisine: "甜品 / 雪糕", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 15, name: "山旮旯", cuisine: "特色咖啡室", building: "D2 Place 附近", date: "2026-10-31", visited: false },
+            { id: 16, name: "Say Hey Bakery", cuisine: "貝果 / 麵包烘焙", building: "D2 Place 附近", date: "2026-10-31", visited: false },
+            { id: 17, name: "Mitch Craft Beer", cuisine: "手工啤酒", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 18, name: "天后", cuisine: "中菜館", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 19, name: "幸福鳥", cuisine: "日式串燒", building: "D2 Place", date: "2026-10-31", visited: false },
+            { id: 20, name: "度頭咖啡", cuisine: "精品咖啡", building: "D2 Place", date: "2026-10-31", visited: false },
+
+            // 億利工業中心 (21-40)
+            { id: 21, name: "黑布小巷", cuisine: "港式 / 台式小食", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 22, name: "嚐回味", cuisine: "港式快餐", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 23, name: "大源食堂", cuisine: "工廈飯堂", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 24, name: "素食一家", cuisine: "素食 / 自助", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 25, name: "億利咖啡", cuisine: "輕食 / 咖啡", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 26, name: "順興食堂", cuisine: "茶餐廳", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 27, name: "新記飯堂", cuisine: "燒味飯", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 28, name: "億利快餐", cuisine: "地道快餐", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 29, name: "工房美食", cuisine: "港式小炒", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 30, name: "美味棧食堂", cuisine: "碟頭飯", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 31, name: "鴻記茶檔", cuisine: "奶茶公仔麵", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 32, name: "金寶茶餐廳", cuisine: "茶餐", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 33, name: "友來小廚", cuisine: "小菜晚飯", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 34, name: "麥記美食", cuisine: "車仔麵", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 35, name: "活力 Cafe", cuisine: "三文治輕食", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 36, name: "香滿園", cuisine: "燒味茶餐", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 37, name: "好味速遞", cuisine: "兩餸飯", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 38, name: "盈豐食堂", cuisine: "工廈飯堂", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 39, name: "潮發粉麵", cuisine: "潮州粉麵", building: "億利工業中心", date: "2026-10-31", visited: false },
+            { id: 40, name: "佳樂快餐", cuisine: "港式快餐", building: "億利工業中心", date: "2026-10-31", visited: false },
+
+            // 香港工業中心 A-C座 (41-65)
+            { id: 41, name: "好棧", cuisine: "港式小菜", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 42, name: "香工快餐", cuisine: "港式茶餐", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 43, name: "佳記美食", cuisine: "地道小食", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 44, name: "工房咖啡", cuisine: "手沖咖啡", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 45, name: "新記茶檔", cuisine: "港式奶茶 / 麵食", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 46, name: "香工食堂", cuisine: "碟頭飯", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 47, name: "源記茶餐廳", cuisine: "茶餐", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 48, name: "美景快餐", cuisine: "快餐", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 49, name: "鴻運冰室", cuisine: "懷舊冰室", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 50, name: "麗閣茶檔", cuisine: "常餐", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 51, name: "金記餐室", cuisine: "港式茶餐", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 52, name: "成發美食", cuisine: "地道小食", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 53, name: "百味閣", cuisine: "港式小炒", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 54, name: "香工閣", cuisine: "快餐", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 55, name: "永盛食堂", cuisine: "兩餸飯", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 56, name: "華記粉麵", cuisine: "牛腩麵", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 57, name: "順利快餐", cuisine: "碟頭飯", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 58, name: "新時代 Cafe", cuisine: "輕食", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 59, name: "友記粥麵", cuisine: "廣東粥品", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 60, name: "美味園", cuisine: "港式茶餐", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 61, name: "大昌食堂", cuisine: "工廈飯堂", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 62, name: "光輝茶檔", cuisine: "奶茶", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 63, name: "金寶快餐", cuisine: "快餐", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 64, name: "合興隆", cuisine: "地道美食", building: "香港工業中心", date: "2026-10-31", visited: false },
+            { id: 65, name: "香工冰室", cuisine: "茶餐廳", building: "香港工業中心", date: "2026-10-31", visited: false },
+
+            // 長沙灣廣場 & 荔枝角道一帶 (66-85)
+            { id: 66, name: "捌捌陸台式料理", cuisine: "台灣菜", building: "荔枝角商圈", date: "2026-10-31", visited: false },
+            { id: 67, name: "老荔冰室", cuisine: "港式茶餐廳", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 68, name: "天使冰室", cuisine: "港式茶餐廳", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 69, name: "番茄師兄", cuisine: "番茄濃湯麵", building: "荔枝角道", date: "2026-10-31", visited: false },
+            { id: 70, name: "金酒屋 KINZAKAYA", cuisine: "日式居酒屋", building: "荔枝角核心", date: "2026-10-31", visited: false },
+            { id: 71, name: "永記車仔麵", cuisine: "車仔麵", building: "荔枝角道", date: "2026-10-31", visited: false },
+            { id: 72, name: "大尚宮", cuisine: "韓國菜", building: "荔枝角道", date: "2026-10-31", visited: false },
+            { id: 73, name: "猛男廚房", cuisine: "意大利菜", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 74, name: "INN - I'm Not Nothing", cuisine: "西式意粉", building: "荔枝角道", date: "2026-10-31", visited: false },
+            { id: 75, name: "美心 MX", cuisine: "港式快餐", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 76, name: "大快活", cuisine: "港式快餐", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 77, name: "太興", cuisine: "燒味茶餐廳", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 78, name: "吉野家", cuisine: "日式快餐", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 79, name: "譚仔三哥米線", cuisine: "米線", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 80, name: "一粥麵", cuisine: "廣東粥麵", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 81, name: "大家樂", cuisine: "港式快餐", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 82, name: "翠華餐廳", cuisine: "港式茶餐廳", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 83, name: "敏華冰廳", cuisine: "懷舊冰室", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 84, name: "亞參雞飯", cuisine: "新加坡菜", building: "長沙灣廣場", date: "2026-10-31", visited: false },
+            { id: 85, name: "Bakehouse 概念店", cuisine: "烘焙 / 蛋撻", building: "荔枝角", date: "2026-10-31", visited: false },
+
+            // 其它工廈與周邊街道 (86-100)
+            { id: 86, name: "Monster Kitchen", cuisine: "西式露天餐飲", building: "嘉名工廠大廈", date: "2026-10-31", visited: false },
+            { id: 87, name: "好好運快餐店", cuisine: "沙嗲牛肉麵", building: "福華街工廈", date: "2026-10-31", visited: false },
+            { id: 88, name: "添福漢堡", cuisine: "美式漢堡", building: "荔枝角分店", date: "2026-10-31", visited: false },
+            { id: 89, name: "成記茶寮", cuisine: "地道茶餐", building: "青山道工廈", date: "2026-10-31", visited: false },
+            { id: 90, name: "友記粥品", cuisine: "廣東粥品", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 91, name: "九龍棧", cuisine: "燒味茶餐廳", building: "九龍廣場", date: "2026-10-31", visited: false },
+            { id: 92, name: "嚐樂", cuisine: "港式西餐", building: "九龍廣場", date: "2026-10-31", visited: false },
+            { id: 93, name: "時光隧道 Cafe", cuisine: "特色咖啡", building: "時運中心", date: "2026-10-31", visited: false },
+            { id: 94, name: "工廈冰室", cuisine: "懷舊冰室", building: "鴻昌工廠大廈", date: "2026-10-31", visited: false },
+            { id: 95, name: "源記潮州打冷", cuisine: "潮州菜", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 96, name: "華星冰室", cuisine: "校長士多", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 97, name: "新園冰室", cuisine: "茶餐廳", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 98, name: "金華冰廳分店", cuisine: "菠蘿油", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 99, name: "聯發茶餐廳", cuisine: "地道茶餐", building: "荔枝角", date: "2026-10-31", visited: false },
+            { id: 100, name: "勝香園風味檔", cuisine: "大排檔風味", building: "荔枝角工廈", date: "2026-10-31", visited: false }
+        ];
+
+        let restaurants = JSON.parse(localStorage.getItem('lck_restaurants_100_20261031')) || fullData;
+        let currentFilter = 'all';
+
+        function saveData() {
+            localStorage.setItem('lck_restaurants_100_20261031', JSON.stringify(restaurants));
+            render();
+        }
+
+        function toggleVisited(id) {
+            const item = restaurants.find(r => r.id === id);
+            if (item) {
+                item.visited = !item.visited;
+                saveData();
+            }
+        }
+
+        function setFilter(filter, btn) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        }
+
+        function render() {
+            const listEl = document.getElementById('restaurantList');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+
+            const filtered = restaurants.filter(r => {
+                const matchesSearch = r.name.toLowerCase().includes(searchVal) || 
+                                      r.cuisine.toLowerCase().includes(searchVal) || 
+                                      r.building.toLowerCase().includes(searchVal);
+                if (currentFilter === 'unvisited') return matchesSearch && !r.visited;
+                if (currentFilter === 'visited') return matchesSearch && r.visited;
+                return matchesSearch;
+            });
+
+            const total = restaurants.length;
+            const visitedCount = restaurants.filter(r => r.visited).length;
+            const percent = total > 0 ? Math.round((visitedCount / total) * 100) : 0;
+            
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressCount').innerText = `已食：${visitedCount} / ${total} 間`;
+            document.getElementById('progressPercent').innerText = percent + '%';
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `<div class="empty-state">搵唔到相關餐廳</div>`;
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(r => `
+                <div class="restaurant-card ${r.visited ? 'visited' : ''}" onclick="toggleVisited(${r.id})">
+                    <label class="checkbox-container" onclick="event.stopPropagation()">
+                        <input type="checkbox" ${r.visited ? 'checked' : ''} onchange="toggleVisited(${r.id})">
+                        <span class="checkmark"></span>
+                    </label>
+                    <div class="res-info">
+                        <div class="res-name">${r.name}</div>
+                        <div class="res-meta">
+                            <span>${r.cuisine}</span>
+                            <span>•</span>
+                            <span class="res-building">${r.building}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterRestaurants() {
+            render();
+        }
+
+        render();
+    </script>
+</body>
+</html>
